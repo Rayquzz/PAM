@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Calculator Reducere',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
@@ -30,17 +31,20 @@ class DiscountCalculator extends StatefulWidget {
 }
 
 class _DiscountCalculatorState extends State<DiscountCalculator> {
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _discountController = TextEditingController();
 
   double _discountValue = 0.0;
   double _finalPrice = 0.0;
+  String _productName = '';
   String _selectedCurrency = 'MDL';
 
   final List<String> _currencies = ['MDL', 'EUR', 'USD'];
 
   void _calculate() {
     setState(() {
+      _productName = _nameController.text;
       double price = double.tryParse(_priceController.text) ?? 0.0;
       double discountPercent = double.tryParse(_discountController.text) ?? 0.0;
 
@@ -61,6 +65,15 @@ class _DiscountCalculatorState extends State<DiscountCalculator> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                labelText: 'Denumire produs',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.shopping_bag),
+              ),
+            ),
+            const SizedBox(height: 16),
             TextField(
               controller: _priceController,
               keyboardType: TextInputType.number,
@@ -118,6 +131,12 @@ class _DiscountCalculatorState extends State<DiscountCalculator> {
               ),
               child: Column(
                 children: [
+                  if (_productName.isNotEmpty)
+                    Text(
+                      'Produs: $_productName',
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  if (_productName.isNotEmpty) const SizedBox(height: 12),
                   Text(
                     'Valoarea reducerii: ${_discountValue.toStringAsFixed(2)} $_selectedCurrency',
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
@@ -138,6 +157,7 @@ class _DiscountCalculatorState extends State<DiscountCalculator> {
 
   @override
   void dispose() {
+    _nameController.dispose();
     _priceController.dispose();
     _discountController.dispose();
     super.dispose();
