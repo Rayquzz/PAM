@@ -16,15 +16,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const DiscountCalculator(title: 'Calculator de Reducere'),
+      home: const DiscountCalculator(),
     );
   }
 }
 
 class DiscountCalculator extends StatefulWidget {
-  const DiscountCalculator({super.key, required this.title});
-
-  final String title;
+  const DiscountCalculator({super.key});
 
   @override
   State<DiscountCalculator> createState() => _DiscountCalculatorState();
@@ -35,7 +33,7 @@ class _DiscountCalculatorState extends State<DiscountCalculator> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _discountController = TextEditingController();
 
-  double _discountValue = 0.0;
+  double _discountAmount = 0.0;
   double _finalPrice = 0.0;
   String _productName = '';
   String _selectedCurrency = 'MDL';
@@ -43,13 +41,14 @@ class _DiscountCalculatorState extends State<DiscountCalculator> {
   final List<String> _currencies = ['MDL', 'EUR', 'USD'];
 
   void _calculate() {
+    final price = double.tryParse(_priceController.text) ?? 0.0;
+    final discountPercent =
+        double.tryParse(_discountController.text) ?? 0.0;
+
     setState(() {
       _productName = _nameController.text;
-      double price = double.tryParse(_priceController.text) ?? 0.0;
-      double discountPercent = double.tryParse(_discountController.text) ?? 0.0;
-
-      _discountValue = (price * discountPercent) / 100;
-      _finalPrice = price - _discountValue;
+      _discountAmount = price * discountPercent / 100;
+      _finalPrice = price - _discountAmount;
     });
   }
 
@@ -58,7 +57,7 @@ class _DiscountCalculatorState extends State<DiscountCalculator> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        title: Text(widget.title),
+        title: const Text('Calculator de Reducere'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -100,9 +99,11 @@ class _DiscountCalculatorState extends State<DiscountCalculator> {
                 const SizedBox(width: 10),
                 DropdownButton<String>(
                   value: _selectedCurrency,
-                  onChanged: (String? newValue) {
+                  onChanged: (newCurrency) {
+                    if (newCurrency == null) return;
+
                     setState(() {
-                      _selectedCurrency = newValue!;
+                      _selectedCurrency = newCurrency;
                     });
                   },
                   items: _currencies.map<DropdownMenuItem<String>>((String value) {
@@ -138,7 +139,7 @@ class _DiscountCalculatorState extends State<DiscountCalculator> {
                     ),
                   if (_productName.isNotEmpty) const SizedBox(height: 12),
                   Text(
-                    'Valoarea reducerii: ${_discountValue.toStringAsFixed(2)} $_selectedCurrency',
+                    'Valoarea reducerii: ${_discountAmount.toStringAsFixed(2)} $_selectedCurrency',
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 8),
