@@ -1,0 +1,24 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "flutterframework",
+          "kind" : "fileSystem",
+          "location" : "/Users/cristi/utm/PAM/labs/macos/Flutter/ephemeral/Packages/.packages/FlutterFramework",
+          "name" : "FlutterFramework"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/cristi/utm/PAM/labs/macos/Flutter/ephemeral/Packages/.packages/FlutterFramework"
+        },
+        "subpath" : "flutterframework"
+      }
+    ]
+  },
+  "version" : 6
+}
